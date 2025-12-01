@@ -1,0 +1,20 @@
+# Virtual Environment
+venv310/
+# If you use the standard 'venv' name, include this too:
+venv/
+.env
+
+# Generated/Cache Files
+__pycache__/
+*.pyc
+
+# Local IDE Files and Settings
+.vscode/
+
+# Project-Specific Exclusions
+setup_and_testing/
+
+# Credentials and Secrets (Crucial!)
+gcs-credentials.json
+
+tts_model/
