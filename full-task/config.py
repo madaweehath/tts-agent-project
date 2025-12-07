@@ -14,10 +14,10 @@ OPENAI_API_KEY = "sk-proj-IkgAuFK7_hfSr4TU-Ka-vpSNoMKGndwOmLGyIBQn2ahEES554Dzhn3
 MAX_RETRIES = 3
 
 # ============ TTS Configuration ============
-TTS_MODEL_DIR = "./tts_model"
-CHECKPOINT_PATH = os.path.join(TTS_MODEL_DIR, "checkpoint_files/best_model.pth")
-CONFIG_PATH = os.path.join(TTS_MODEL_DIR, "checkpoint_files/config.json")
-TOKENIZER_PATH = os.path.join(TTS_MODEL_DIR, "XTTS_v2.0_original_model_files/vocab.json")
+TTS_MODEL_DIR = "tts_model"
+CHECKPOINT_PATH = os.path.join(TTS_MODEL_DIR, "checkpoint_files", "best_model.pth")
+CONFIG_PATH = os.path.join(TTS_MODEL_DIR, "checkpoint_files", "config.json")
+TOKENIZER_PATH = os.path.join(TTS_MODEL_DIR, "XTTS_v2.0_original_model_files", "vocab.json")
 SPEAKER_REFERENCE = os.path.join(TTS_MODEL_DIR, "sample_83.wav")
 OUTPUT_DIR = os.path.join(TTS_MODEL_DIR, "audio_outputs")
 
