@@ -1,5 +1,5 @@
-torch 2.5.1+cu121
-torchaudio 2.5.1+cu121
+torch==2.5.1
+torchaudio==2.5.1
 git+https://github.com/coqui-ai/TTS
 transformers==4.37.1
 flask

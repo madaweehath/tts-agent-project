@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 import traceback
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Import all services
 from config import OUTPUT_DIR
@@ -45,7 +45,7 @@ def scrape_news():
             "articles": news_data
         })
     except Exception as e:
-        print(f"❌ Error in scrape endpoint: {e}")
+        print(f"Error in scrape endpoint: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/api/convert-to-dialect', methods=['POST'])
@@ -132,8 +132,25 @@ def scrape_and_process_all():
                 
                 title = article['title']
                 fusha_text = article['description_fusha']
-                publication_date = article['date']
-                
+                #publication_date = article['date']
+
+                # 🚨 FIX START: Process the publicationDate for OffsetDateTime 🚨
+                raw_date_string = article['date']
+
+                # Format for RFC 822/2822: "Sun, 23 Nov 2025 00:16:15 +0300"
+                # The %z handles the +0300 offset.
+                RSS_DATE_FORMAT = '%a, %d %b %Y %H:%M:%S %z'
+
+                # 1. Parse the string into a timezone-aware datetime object
+                dt_aware_object = datetime.strptime(raw_date_string, RSS_DATE_FORMAT)
+
+                # 2. Convert it to the required ISO 8601 string for Java's OffsetDateTime
+                # Example output: "2025-11-23T00:16:15+03:00"
+                publication_date_iso = dt_aware_object.isoformat()
+
+                print(f"  📅 Parsed Date (ISO 8601): {publication_date_iso}")
+                # 🚨 FIX END 🚨
+
                 # Convert to dialect
                 print("  📝 Converting to Saudi dialect...")
                 dialect_script = convert_to_saudi_dialect(fusha_text)
@@ -188,10 +205,10 @@ def scrape_and_process_all():
                 episode_json = {
                     "article": {
                         "title": title,
+                        "category": "news",
                         "author": None,
                         "publisher": "AlRiyadh",
-                        "category": "news",
-                        "publicationDate": publication_date,
+                        "publicationDate": publication_date_iso, # <-- 🔥 USE THE FIXED VARIABLE 🔥
                         "contentRawUrl": content_gcs_url,
                         "scriptUrl": script_gcs_url
                     },
