@@ -1,4 +1,6 @@
 import uuid
+from email.utils import parsedate_to_datetime
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
@@ -35,7 +37,7 @@ def scrape_news():
     """Scrape latest news from AlRiyadh"""
     try:
         print("\n" + "="*50)
-        print("🔍 Scrape endpoint called")
+        print("Scrape endpoint called")
         print("="*50)
         news_data = scrape_alriyadh_news()
         return jsonify({
@@ -179,7 +181,7 @@ def scrape_and_process_all():
         print("=" * 60)
 
         # Step 1: Scrape news
-        print("📡 Step 1: Scraping news from AlRiyadh...")
+        print("Step 1: Scraping news from AlRiyadh...")
         news_articles = scrape_alriyadh_news()
 
         if not news_articles:
@@ -188,7 +190,7 @@ def scrape_and_process_all():
                 "error": "No articles scraped"
             }), 404
 
-        print(f"✓ Scraped {len(news_articles)} articles")
+        print(f"Scraped {len(news_articles)} articles")
 
         # Step 2: Process each article
         processed_episodes = []
@@ -201,6 +203,9 @@ def scrape_and_process_all():
                 title = article['title']
                 fusha_text = article['description_fusha']
                 publication_date = article['date']
+                if publication_date:
+                    dt = parsedate_to_datetime(publication_date)
+                    publication_date = dt.isoformat()
 
                 print("Classifying article...")
                 classification_result = news_classifier_agent(title, fusha_text)
@@ -242,7 +247,7 @@ def scrape_and_process_all():
                     f.write(fusha_text)
 
                 # Upload to GCS
-                print("  ☁️  Uploading to Google Cloud Storage...")
+                print("Uploading to Google Cloud Storage...")
                 audio_gcs_url = upload_to_gcs(
                     audio_path,
                     f"audio/{audio_filename}.wav"
@@ -279,7 +284,7 @@ def scrape_and_process_all():
                         "title": title,
                         "description": f"بودكاست: {title}",
                         "scriptUrlPath": script_gcs_url,
-                        "imageUrl": None
+                        "imageUrl": "https://i.imgur.com/Lt65Eso.png"
                     }
                 }
 

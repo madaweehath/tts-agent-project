@@ -8,9 +8,9 @@ from config import OPENAI_API_KEY, MODEL_GENERATOR, MODEL_VALIDATOR, MODEL_CLASS
 openai_client = None
 try:
     openai_client = OpenAI(api_key=OPENAI_API_KEY)
-    print("✓ OpenAI client initialized")
+    print("OpenAI client initialized")
 except Exception as e:
-    print(f"✗ Error initializing OpenAI: {e}")
+    print(f"Error initializing OpenAI: {e}")
 
 
 # ============ Helper Functions (Updated) ============

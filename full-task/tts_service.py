@@ -49,6 +49,11 @@ def is_tts_ready() -> bool:
 
 def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: str, config_path: str) -> Optional[
     Tuple[Xtts, Tuple[Any, Any]]]:
+
+    print(f"Current working directory: {os.getcwd()}")
+    print(f"Absolute config path: {os.path.abspath(config_path)}")
+    print(f"Config file exists: {os.path.exists(config_path)}")
+
     """Helper to initialize a single TTS model and compute its latents."""
     try:
         print(f"Loading {voice_type} TTS model...")
@@ -67,7 +72,7 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
         tts_model.to(device)
         tts_model.eval()
 
-        print(f"🎤 Computing {voice_type} speaker latents from {speaker_ref}...")
+        print(f"Computing {voice_type} speaker latents from {speaker_ref}...")
         gpt_cond_latent, speaker_embedding = tts_model.get_conditioning_latents(
             audio_path=[resolve_path(speaker_ref)]
         )

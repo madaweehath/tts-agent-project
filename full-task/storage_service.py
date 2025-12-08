@@ -47,7 +47,7 @@ def upload_to_gcs(local_file_path: str, destination_blob_name: str):
         # Generate public URL
         public_url = f"https://storage.googleapis.com/{GCS_BUCKET_NAME}/{destination_blob_name}"
 
-        print(f"✓ Uploaded to GCS: {public_url}")
+        print(f"Uploaded to GCS: {public_url}")
         return public_url
 
     except Exception as e:
@@ -61,6 +61,6 @@ def cleanup_local_files(*file_paths):
         try:
             if os.path.exists(file_path):
                 os.remove(file_path)
-                print(f"  🧹 Cleaned up: {file_path}")
+                print(f"Cleaned up: {file_path}")
         except Exception as e:
-            print(f"  ⚠️  Failed to delete {file_path}: {e}")
+            print(f"Failed to delete {file_path}: {e}")

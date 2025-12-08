@@ -52,7 +52,7 @@ def scrape_alriyadh_news():
                         'description_fusha': description_text,
                         'date': pub_date_text,
                         'source': 'AlRiyadh',
-                        'scraped_time': datetime.now().isoformat()
+                        'scraped_time': datetime.now().astimezone().isoformat()
                     })
             except Exception as e:
                 print(f"Error processing item: {e}")
@@ -65,20 +65,22 @@ def scrape_alriyadh_news():
         print(f"Error scraping news: {e}")
         return []
 
+"""
     # mock data for quick testing
-    # return [
-    # {
-    #     'title': "شخصية مُلهِمة",
-    #     'description_fusha': "في بعض الأحيان.",
-    #     'date': "Sun, 23 Nov 2025 00:16:15 +0300",
-    #     'source': "AlRiyadh",
-    #     'scraped_time': "2025-11-23T19:29:44.504955"
-    # },
-    # {
-    #     'title': "مجرد كلام في سكة التايهين",
-    #     'description_fusha': "هكذا بدون ألقاب تسبقه",
-    #     'date': "Sun, 23 Nov 2025 00:20:23 +0300",
-    #     'source': "AlRiyadh",
-    #     'scraped_time': "2025-11-23T19:29:44.520892"
-    # }
-    # ]
+    return [
+    {
+         'title': "شخصية مُلهِمة",
+         'description_fusha': "في بعض الأحيان.",
+         'date': "Sun, 23 Nov 2025 00:16:15 +0300",
+         'source': "AlRiyadh",
+         'scraped_time': "2025-11-23T19:29:44.504955"
+     },
+     {
+         'title': "مجرد كلام في سكة التايهين",
+         'description_fusha': "هكذا بدون ألقاب تسبقه",
+         'date': "Sun, 23 Nov 2025 00:20:23 +0300",
+         'source': "AlRiyadh",
+         'scraped_time': "2025-11-23T19:29:44.520892"
+     }
+     ]
+"""
