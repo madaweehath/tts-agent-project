@@ -18,9 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag tts-agent:$(date +%s)
-
+      # login to the docker registry and pull the latest image for caching
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -33,6 +31,23 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: Pull latest image (if exists)
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main || echo "No latest image available yet"
+
+          - name: Extract metadata (tags, labels) for Docker
+            id: meta
+            uses: docker/metadata-action@v5
+            with:
+              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+              # Ensure we always publish a `latest` tag so the pull above works next run
+              tags: |
+                type=raw,value=latest
+                type=sha
+
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag tts-agent:$(date +%s)
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -40,3 +55,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # Use the pulled `latest` image as cache source (optional but recommended)
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-to: type=inline
