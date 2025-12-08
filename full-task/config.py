@@ -1,8 +1,8 @@
 import os
 
 MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT", "http://localhost:9000")  # minio api endpoint
-MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY") # the username for minio, should be included in the environment variables for both local and the deployed apps
-MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY") # the password for minio, should be included in the environment variables for both local and the deployed apps
+MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY", "admin") # the username for minio, should be included in the environment variables for both local and the deployed apps
+MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY", "admin") # the password for minio, should be included in the environment variables for both local and the deployed apps
 MINIO_BUCKET = os.getenv("MINIO_BUCKET", "temp") # the bucket name that was chosen
 MINIO_PREFIX = os.getenv("MINIO_PREFIX", "arabic-news-podcast/tts_model") # this is the prefix for the files in the bucket, which is the directory under the bucket
 MINIO_SECURE = os.getenv("MINIO_SECURE", "false").lower() == "true"  # set true if using https
