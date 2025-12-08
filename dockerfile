@@ -20,6 +20,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # --- IMPROVED COPY STRATEGY ---
 
 # 1. Copy the large, stable model files
+# should be removed in favor of using the S3 storage
 COPY tts_model /app/tts_model
 
 # 2. !! CRITICAL SECURITY CHANGE !!
@@ -29,6 +30,7 @@ COPY tts_model /app/tts_model
 
 # 3. Copy the lightweight application code last
 # The source path includes 'full-task/', but the destination is '.' (the /app folder)
+# would probably be better to do COPY full-task/* .
 COPY full-task/app.py .
 COPY full-task/config.py .
 COPY full-task/llm_service.py .
