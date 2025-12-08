@@ -18,4 +18,4 @@ setup_and_testing/
 # Credentials and Secrets (Crucial!)
 gcs-credentials.json
 
-tts_model/
+full-task/tts_model/

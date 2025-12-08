@@ -6,8 +6,8 @@ from TTS.tts.configs.xtts_config import XttsConfig
 from TTS.tts.models.xtts import Xtts
 import uuid
 from typing import Optional, Dict, Any, Tuple
-import json
 import re
+from minio_resolver import resolve_path
 
 # --- NEW IMPORTS for Text Splitting ---
 # Note: You must ensure 'spacy' is installed in your environment if you want to use it.
@@ -53,13 +53,13 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
     try:
         print(f"Loading {voice_type} TTS model...")
         config = XttsConfig()
-        config.load_json(config_path)  # Use the specific config path
+        config.load_json(resolve_path(config_path))  # Use the specific config path
 
         tts_model = Xtts.init_from_config(config)
         tts_model.load_checkpoint(
             config,
-            checkpoint_path=checkpoint_path,
-            vocab_path=TOKENIZER_PATH,
+            checkpoint_path=resolve_path(checkpoint_path),
+            vocab_path=resolve_path(TOKENIZER_PATH),
             use_deepspeed=False
         )
 
@@ -69,7 +69,7 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
 
         print(f"🎤 Computing {voice_type} speaker latents from {speaker_ref}...")
         gpt_cond_latent, speaker_embedding = tts_model.get_conditioning_latents(
-            audio_path=[speaker_ref]
+            audio_path=[resolve_path(speaker_ref)]
         )
 
         print(f"✓ {voice_type.capitalize()} TTS model loaded on {device}")
