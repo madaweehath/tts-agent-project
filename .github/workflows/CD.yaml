@@ -40,9 +40,6 @@ jobs:
             type=raw,value=main
             type=sha
 
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag tts-agent:$(date +%s)
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
