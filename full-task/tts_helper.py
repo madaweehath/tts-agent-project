@@ -12,7 +12,7 @@ try:
     else:
         print("GCS credentials not found - files will be saved locally only")
 except Exception as e:
-    print(f"Error initializing GCS: {e}")
+    print(f"✗ Error initializing GCS: {e}")
 
 
 def get_audio_duration(wav_file_path):
@@ -61,6 +61,6 @@ def cleanup_local_files(*file_paths):
         try:
             if os.path.exists(file_path):
                 os.remove(file_path)
-                print(f"  🧹 Cleaned up: {file_path}")
+                print(f"Cleaned up: {file_path}")
         except Exception as e:
-            print(f"  ⚠️  Failed to delete {file_path}: {e}")
+            print(f"Failed to delete {file_path}: {e}")
