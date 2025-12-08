@@ -10,7 +10,7 @@ MINIO_SECURE = os.getenv("MINIO_SECURE", "false").lower() == "true"  # set true 
 # ============ LLM Configuration ============
 # groq
 # key is exposed, regenerate and populate from an environment variable
-# API_KEY = "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"
+# API_KEY =
 # MODEL_GENERATOR = 'qwen/qwen3-32b'
 # MODEL_VALIDATOR = 'qwen/qwen3-32b'
 
@@ -19,8 +19,7 @@ MODEL_GENERATOR = 'gpt-4o-mini'
 MODEL_VALIDATOR = 'gpt-4o-mini'
 MODEL_CLASSIFIER = 'gpt-4o-mini'
 # key is exposed, regenerate and populate from an environment variable
-OPENAI_API_KEY = "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"
-
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 MAX_RETRIES = 3
 
 # ============ TTS Configuration ============
