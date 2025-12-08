@@ -382,7 +382,6 @@ def tts_arabic(prompt: str,
 def generate_audio(text: str, output_name: Optional[str] = None, voice_type: str = 'normal'):
     """
     Generate audio from text using the selected TTS model and return (path, duration).
-
     This function now acts as a wrapper for the new tts_arabic core logic.
     """
     global tts_models, model_latents
