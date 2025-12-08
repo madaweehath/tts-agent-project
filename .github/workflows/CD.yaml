@@ -35,15 +35,15 @@ jobs:
         run: |
           docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main || echo "No latest image available yet"
 
-          - name: Extract metadata (tags, labels) for Docker
-            id: meta
-            uses: docker/metadata-action@v5
-            with:
-              images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-              # Ensure we always publish a `latest` tag so the pull above works next run
-              tags: |
-                type=raw,value=latest
-                type=sha
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # Ensure we always publish a `latest` tag so the pull above works next run
+          tags: |
+            type=raw,value=latest
+            type=sha
 
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag tts-agent:$(date +%s)
@@ -56,5 +56,5 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           # Use the pulled `latest` image as cache source (optional but recommended)
-          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=registry,ref=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
           cache-to: type=inline
