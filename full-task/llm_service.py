@@ -77,7 +77,7 @@ def news_classifier_agent(title: str, description: str):
     )
 
     if not classification_response:
-        print("  فشل في التصنيف")
+        print(" فشل في التصنيف")
         return "UNKNOWN"
 
     try:
@@ -88,11 +88,11 @@ def news_classifier_agent(title: str, description: str):
         # Return 0 or 1, or UNKNOWN if key is missing/invalid
         news_class = classification_json.get("classification", "UNKNOWN")
 
-        print(f"  [المصنف] النتيجة: {news_class}")
+        print(f" [المصنف] النتيجة: {news_class}")
         return news_class
 
     except json.JSONDecodeError as e:
-        print(f"  فشل تحليل JSON من المصنف: {e}")
+        print(f" فشل تحليل JSON من المصنف: {e}")
         return "UNKNOWN"
 
 
@@ -108,7 +108,7 @@ def convert_to_saudi_dialect(fusha_text: str):
     generated_text = ""
 
     while current_retries < MAX_RETRIES:
-        print(f"  [Agent 2] معالجة: {fusha_text[:40]}... (محاولة {current_retries + 1}/{MAX_RETRIES})")
+        print(f"[Agent 2] معالجة: {fusha_text[:40]}... (محاولة {current_retries + 1}/{MAX_RETRIES})")
 
         # Generation Step (Podcast Agent Logic)
         system_prompt_generate = (
@@ -162,16 +162,16 @@ def convert_to_saudi_dialect(fusha_text: str):
             is_najde = validation_json.get("is_najde")
 
             if is_najde is True:
-                print(" Done نجح التحقق (لهجة نجدية).")
+                print("Done نجح التحقق (لهجة نجدية).")
                 return generated_text
             else:
-                print("  Fail فشل التحقق (ليست لهجة نجدية). جاري إعادة التوليد...")
+                print("Fail فشل التحقق (ليست لهجة نجدية). جاري إعادة التوليد...")
                 current_retries += 1
 
         except json.JSONDecodeError as e:
-            print(f"  fail فشل تحليل JSON من المدقق: {e}. جاري إعادة المحاولة...")
+            print(f"fail فشل تحليل JSON من المدقق: {e}. جاري إعادة المحاولة...")
             current_retries += 1
 
     # Final failure
-    print(f" drop  فشل نهائي في معالجة النص: {fusha_text[:50]}...")
+    print(f" drop فشل نهائي في معالجة النص: {fusha_text[:50]}...")
     return "FAILED_GENERATION"
