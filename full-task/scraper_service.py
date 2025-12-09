@@ -10,7 +10,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def scrape_alriyadh_news():
     """Scrape news from AlRiyadh RSS feed"""
-    """
+
     try:
         print("Fetching news from AlRiyadh...")
         url = "https://www.alriyadh.com/section.columns.xml"
@@ -84,3 +84,4 @@ def scrape_alriyadh_news():
          'scraped_time': "2025-11-23T19:29:44.520892"
      }
      ]
+"""

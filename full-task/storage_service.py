@@ -42,7 +42,7 @@ def upload_to_gcs(local_file_path: str, destination_blob_name: str):
         blob.upload_from_filename(local_file_path)
 
         # Make blob publicly accessible (optional - for direct access)
-        blob.make_public()
+        # blob.make_public()
 
         # Generate public URL
         public_url = f"https://storage.googleapis.com/{GCS_BUCKET_NAME}/{destination_blob_name}"

@@ -9,9 +9,7 @@ from typing import Optional, Dict, Any, Tuple
 import re
 from minio_resolver import resolve_path
 
-# --- NEW IMPORTS for Text Splitting ---
-# Note: You must ensure 'spacy' is installed in your environment if you want to use it.
-# If not installed, the code includes a regex fallback.
+# --- import for text splitting ---
 try:
     import spacy
     # from spacy.lang.ar import Arabic # Not explicitly needed if using load_arabic_spacy()
@@ -402,7 +400,7 @@ def generate_audio(text: str, output_name: Optional[str] = None, voice_type: str
         if not output_name:
             output_name = f"audio_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}_{voice_type}"
 
-        print(f"🎙️ Generating audio with '{voice_type}' voice (length: {len(text)} chars)...")
+        print(f"Generating audio with '{voice_type}' voice (length: {len(text)} chars)...")
 
         # --- CALL THE NEW CORE FUNCTION ---
         output_path, duration = tts_arabic(
