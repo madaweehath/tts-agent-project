@@ -55,14 +55,24 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
     """Helper to initialize a single TTS model and compute its latents."""
     try:
         print(f"Loading {voice_type} TTS model...")
+
         config = XttsConfig()
         config.load_json(resolve_path(config_path))  # Use the specific config path
 
+        # Resolve checkpoint path
+        resolved_checkpoint_path = resolve_path(checkpoint_path)
+        # Extract the directory from checkpoint path
+        checkpoint_dir = os.path.dirname(resolved_checkpoint_path)
+        # Resolve and debug tokenizer path
+        resolved_tokenizer_path = resolve_path(TOKENIZER_PATH)
+
         tts_model = Xtts.init_from_config(config)
+
         tts_model.load_checkpoint(
             config,
-            checkpoint_path=resolve_path(checkpoint_path),
-            vocab_path=resolve_path(TOKENIZER_PATH),
+            checkpoint_dir=checkpoint_dir,
+            checkpoint_path=resolved_checkpoint_path,
+            vocab_path=resolved_tokenizer_path,
             use_deepspeed=False
         )
 
@@ -75,10 +85,10 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
             audio_path=[resolve_path(speaker_ref)]
         )
 
-        print(f"✓ {voice_type.capitalize()} TTS model loaded on {device}")
+        print(f"DING DING DING! {voice_type.capitalize()} TTS model loaded on {device}")
         return tts_model, (gpt_cond_latent, speaker_embedding)
     except Exception as e:
-        print(f"✗ Error loading {voice_type} TTS model: {e}")
+        print(f"Error loading {voice_type} TTS model: {e}")
         import traceback
         traceback.print_exc()
         return None
