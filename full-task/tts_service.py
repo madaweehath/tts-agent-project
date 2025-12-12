@@ -53,16 +53,55 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
     print(f"Config file exists: {os.path.exists(config_path)}")
 
     """Helper to initialize a single TTS model and compute its latents."""
+
+    print("\n" + "=" * 70)
+    print(f"[DEBUG] SERVER FAILS HERE: _load_model_and_latents - Loading {voice_type.upper()} Model")
+    print("=" * 70)
+
+    # Method Parameters
+    print(f"[DEBUG] Method Parameters:")
+    print(f"[DEBUG]   voice_type: '{voice_type}'")
+    print(f"[DEBUG]   checkpoint_path: '{checkpoint_path}'")
+    print(f"[DEBUG]   speaker_ref: '{speaker_ref}'")
+    print(f"[DEBUG]   config_path: '{config_path}'")
+    print(f"[DEBUG]   TOKENIZER_PATH (from config): '{TOKENIZER_PATH}'")
+
+    # File Existence Checks (Raw Paths)
+    print(f"\n[DEBUG] Raw Path Existence:")
+    print(f"[DEBUG]   config_path exists: {os.path.exists(config_path)}")
+    print(f"[DEBUG]   checkpoint_path exists: {os.path.exists(checkpoint_path)}")
+    print(f"[DEBUG]   speaker_ref exists: {os.path.exists(speaker_ref)}")
+    print(f"[DEBUG]   TOKENIZER_PATH exists: {os.path.exists(TOKENIZER_PATH)}")
+
     try:
         print(f"Loading {voice_type} TTS model...")
+
+        # Resolve and debug config path
+        resolved_config_path = resolve_path(config_path)
+        print(f"[DEBUG]   Raw config_path: '{config_path}'")
+        print(f"[DEBUG]   Resolved config_path: '{resolved_config_path}'")
+        print(f"[DEBUG]   Resolved config exists: {os.path.exists(resolved_config_path)}")
+
         config = XttsConfig()
         config.load_json(resolve_path(config_path))  # Use the specific config path
+
+        # Resolve and debug checkpoint path
+        resolved_checkpoint_path = resolve_path(checkpoint_path)
+        print(f"[DEBUG]   Raw checkpoint_path: '{checkpoint_path}'")
+        print(f"[DEBUG]   Resolved checkpoint_path: '{resolved_checkpoint_path}'")
+        print(f"[DEBUG]   Resolved checkpoint exists: {os.path.exists(resolved_checkpoint_path)}")
+
+        # Resolve and debug tokenizer path
+        resolved_tokenizer_path = resolve_path(TOKENIZER_PATH)
+        print(f"[DEBUG]   Raw TOKENIZER_PATH: '{TOKENIZER_PATH}'")
+        print(f"[DEBUG]   Resolved TOKENIZER_PATH: '{resolved_tokenizer_path}'")
+        print(f"[DEBUG]   Resolved tokenizer exists: {os.path.exists(resolved_tokenizer_path)}")
 
         tts_model = Xtts.init_from_config(config)
         tts_model.load_checkpoint(
             config,
-            checkpoint_path=resolve_path(checkpoint_path),
-            vocab_path=resolve_path(TOKENIZER_PATH),
+            checkpoint_path=resolved_checkpoint_path,
+            vocab_path=resolved_tokenizer_path,
             use_deepspeed=False
         )
 
@@ -87,6 +126,20 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
 def initialize_tts():
     """Initialize both TTS models on startup"""
     global tts_models, model_latents, nlp_arabic
+
+    print("\n" + "=" * 70)
+    print("[DEBUG] initialize_tts - Starting TTS Initialization")
+    print("=" * 70)
+    print(f"[DEBUG] Config Constants:")
+    print(f"[DEBUG]   LIVELY_CONFIG_PATH: '{LIVELY_CONFIG_PATH}'")
+    print(f"[DEBUG]   LIVELY_CHECKPOINT_PATH: '{LIVELY_CHECKPOINT_PATH}'")
+    print(f"[DEBUG]   LIVELY_SPEAKER_REFERENCE: '{LIVELY_SPEAKER_REFERENCE}'")
+    print(f"[DEBUG]   SERIOUS_CONFIG_PATH: '{SERIOUS_CONFIG_PATH}'")
+    print(f"[DEBUG]   SERIOUS_CHECKPOINT_PATH: '{SERIOUS_CHECKPOINT_PATH}'")
+    print(f"[DEBUG]   SERIOUS_SPEAKER_REFERENCE: '{SERIOUS_SPEAKER_REFERENCE}'")
+    print(f"[DEBUG]   TOKENIZER_PATH: '{TOKENIZER_PATH}'")
+    print(f"[DEBUG]   OUTPUT_DIR: '{OUTPUT_DIR}'")
+    print("=" * 70)
 
     # Initialize Spacy once
     nlp_arabic = load_arabic_spacy()
