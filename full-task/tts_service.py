@@ -97,12 +97,18 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
         print(f"[DEBUG]   Resolved TOKENIZER_PATH: '{resolved_tokenizer_path}'")
         print(f"[DEBUG]   Resolved tokenizer exists: {os.path.exists(resolved_tokenizer_path)}")
 
+        # Extract the directory from checkpoint path
+        checkpoint_dir = os.path.dirname(resolved_checkpoint_path)
+        print(f"[DEBUG]   Derived checkpoint_dir: '{checkpoint_dir}'")
+
         tts_model = Xtts.init_from_config(config)
         print(f"[DEBUG]   loaded tts_model")
+        # print(f"[DEBUG]   tts_model: {tts_model}")
         print("[DEBUG] checkpoint size:", os.path.getsize(resolved_checkpoint_path))
         print("[DEBUG] tokenizer size:", os.path.getsize(resolved_tokenizer_path))
         tts_model.load_checkpoint(
             config,
+            checkpoint_dir=checkpoint_dir,
             checkpoint_path=resolved_checkpoint_path,
             vocab_path=resolved_tokenizer_path,
             use_deepspeed=False
