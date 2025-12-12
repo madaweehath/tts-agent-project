@@ -99,7 +99,8 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
 
         tts_model = Xtts.init_from_config(config)
         print(f"[DEBUG]   loaded tts_model")
-        print(f"[DEBUG]   tts_model: {tts_model}")
+        print("[DEBUG] checkpoint size:", os.path.getsize(resolved_checkpoint_path))
+        print("[DEBUG] tokenizer size:", os.path.getsize(resolved_tokenizer_path))
         tts_model.load_checkpoint(
             config,
             checkpoint_path=resolved_checkpoint_path,
