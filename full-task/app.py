@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from config import OUTPUT_DIR
 from llm_service import openai_client, convert_to_saudi_dialect, news_classifier_agent
 from tts_service import initialize_tts, generate_audio, is_tts_ready
-from scraper_service import scrape_alriyadh_news
+from scraper_service import scrape_alriyadh_news, scrape_alriyadh_news_dummy
 from storage_service import gcs_client, upload_to_gcs, get_audio_duration, cleanup_local_files
 
 # ============ Flask Setup ============
@@ -39,7 +39,7 @@ def scrape_news():
         print("\n" + "="*50)
         print("Scrape endpoint called")
         print("="*50)
-        news_data = scrape_alriyadh_news()
+        news_data = scrape_alriyadh_news_dummy()
         return jsonify({
             "success": True,
             "count": len(news_data),
@@ -113,7 +113,7 @@ def scrape_and_convert():
 
     try:
         # 1. SCRAPING PHASE
-        scraped_articles = scrape_alriyadh_news()  # Assuming this now returns the detailed JSON above
+        scraped_articles = scrape_alriyadh_news_dummy()  # Assuming this now returns the detailed JSON above
 
         if not scraped_articles:
             return jsonify({
@@ -182,7 +182,7 @@ def scrape_and_process_all():
 
         # Step 1: Scrape news
         print("Step 1: Scraping news from AlRiyadh...")
-        news_articles = scrape_alriyadh_news()
+        news_articles = scrape_alriyadh_news_dummy()
 
         if not news_articles:
             return jsonify({
@@ -218,18 +218,18 @@ def scrape_and_process_all():
                 print("Converting to Saudi dialect...")
                 dialect_script = convert_to_saudi_dialect(fusha_text)
 
-                if not dialect_script or "ERROR" in dialect_script:
-                    print(f"Skipping article (LLM failed)")
-                    continue
+                # if not dialect_script or "ERROR" in dialect_script:
+                #     print(f"Skipping article (LLM failed)")
+                #     continue
 
                 # Generate audio
                 print(f"Generating audio with **{voice_type.upper()}** voice...")
                 audio_filename = f"audio_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{uuid.uuid4().hex[:8]}_{voice_type}"
                 audio_path, audio_duration = generate_audio(dialect_script, audio_filename, voice_type=voice_type)
 
-                if not audio_path:
-                    print(f"Skipping article (TTS failed)")
-                    continue
+                # if not audio_path:
+                #     print(f"Skipping article (TTS failed)")
+                #     continue
 
                 print(f"Duration: {audio_duration} seconds")
 

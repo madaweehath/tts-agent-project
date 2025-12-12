@@ -66,7 +66,7 @@ def scrape_alriyadh_news():
         print(f"Error scraping news: {e}")
         return []
 
-"""
+def scrape_alriyadh_news_dummy():
     # mock data for quick testing
     return [
     {
@@ -84,4 +84,3 @@ def scrape_alriyadh_news():
          'scraped_time': "2025-11-23T19:29:44.520892"
      }
      ]
-"""
