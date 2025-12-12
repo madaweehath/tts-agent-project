@@ -8,9 +8,12 @@ RUN apt-get update && apt-get install -y \
     libsndfile1-dev \
     espeak-ng \
     libespeak-ng-dev \
+    libgomp1 \
     build-essential \
     git \
     curl \
+    ca-certificates \
+    && update-ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
