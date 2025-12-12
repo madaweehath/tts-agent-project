@@ -98,15 +98,20 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
         print(f"[DEBUG]   Resolved tokenizer exists: {os.path.exists(resolved_tokenizer_path)}")
 
         tts_model = Xtts.init_from_config(config)
+        print(f"[DEBUG]   loaded tts_model")
+        print(f"[DEBUG]   tts_model: {tts_model}")
         tts_model.load_checkpoint(
             config,
             checkpoint_path=resolved_checkpoint_path,
             vocab_path=resolved_tokenizer_path,
             use_deepspeed=False
         )
+        print(f"[DEBUG]   loaded checkpoint")
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print(f"[DEBUG]   loaded device: {device}")
         tts_model.to(device)
+        print(f"[DEBUG]   assigned device to tts_model")
         tts_model.eval()
 
         print(f"Computing {voice_type} speaker latents from {speaker_ref}...")
