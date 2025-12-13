@@ -19,6 +19,9 @@ WORKDIR /app
 # Pre-upgrade pip tooling to avoid build issues
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
+# Install torch gpu support
+RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
+
 # Copy requirements first (for caching)
 COPY requirements.txt .
 
