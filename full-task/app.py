@@ -284,7 +284,7 @@ def scrape_and_process_all():
                         "title": title,
                         "description": f"بودكاست: {title}",
                         "scriptUrlPath": script_gcs_url,
-                        "imageUrl": "https://i.imgur.com/Lt65Eso.png"
+                        "imageUrl": "https://i.imgur.com/WRPZCQa.png"
                     }
                 }
 
