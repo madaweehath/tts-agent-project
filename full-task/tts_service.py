@@ -26,6 +26,7 @@ from config import (
 # ============ Global Model and Latents ============
 tts_models: Dict[str, Xtts] = {}
 model_latents: Dict[str, Tuple[Any, Any]] = {}
+device = None  # Will be set once during initialization
 # General Configs for Inference (based on the notebook)
 SAMPLE_RATE = 24000
 CROSSFADE_MS = 80
@@ -47,6 +48,8 @@ def is_tts_ready() -> bool:
 
 def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: str, config_path: str) -> Optional[
     Tuple[Xtts, Tuple[Any, Any]]]:
+
+    global device
 
     print(f"Current working directory: {os.getcwd()}")
     print(f"Absolute config path: {os.path.abspath(config_path)}")
@@ -76,16 +79,22 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
             use_deepspeed=False
         )
 
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         tts_model.to(device)
         tts_model.eval()
+
+        print(f"Model loaded on: {device}")
+        if torch.cuda.is_available():
+            print(f"GPU: {torch.cuda.get_device_name(0)}")
+            print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1e9:.2f} GB")
 
         print(f"Computing {voice_type} speaker latents from {speaker_ref}...")
         gpt_cond_latent, speaker_embedding = tts_model.get_conditioning_latents(
             audio_path=[resolve_path(speaker_ref)]
         )
+        gpt_cond_latent = gpt_cond_latent.to(device)
+        speaker_embedding = speaker_embedding.to(device)
 
-        print(f"DING DING DING! {voice_type.capitalize()} TTS model loaded on {device}")
+        print(f"DING DING DING! {voice_type.capitalize()}")
         return tts_model, (gpt_cond_latent, speaker_embedding)
     except Exception as e:
         print(f"Error loading {voice_type} TTS model: {e}")
@@ -96,11 +105,12 @@ def _load_model_and_latents(voice_type: str, checkpoint_path: str, speaker_ref: 
 
 def initialize_tts():
     """Initialize both TTS models on startup"""
-    global tts_models, model_latents, nlp_arabic
+    global tts_models, model_latents, nlp_arabic, device
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Initialize Spacy once
     nlp_arabic = load_arabic_spacy()
-
     successful_init = True
 
     # 1. Initialize LIVELY voice model (key is 'normal' for app.py compatibility)
@@ -328,6 +338,7 @@ def tts_arabic(prompt: str,
 
     Returns the path to the combined audio file.
     """
+    global device
 
     if not isinstance(prompt, str) or not prompt.strip():
         raise ValueError("Input text must be a non-empty Arabic string")
@@ -362,6 +373,7 @@ def tts_arabic(prompt: str,
         if wav_data.ndim == 1:
             wav_data = wav_data.unsqueeze(0)
 
+        wav_data = wav_data.to(device)
         audio_chunks.append(wav_data)
 
     # Combine all audio chunks with crossfade
@@ -375,12 +387,13 @@ def tts_arabic(prompt: str,
     combined_filename = f"{output_name}.wav"
     combined_path = os.path.join(OUTPUT_DIR, combined_filename)  # Use OUTPUT_DIR from config
 
-    torchaudio.save(combined_path, combined_audio, SAMPLE_RATE)
+    combined_audio_cpu = combined_audio.cpu() # move to CPU before saving file
+    torchaudio.save(combined_path, combined_audio_cpu, SAMPLE_RATE)
 
     print(f"Combined audio saved: {combined_path}")
 
     # Calculate final duration
-    duration_seconds = combined_audio.shape[1] / SAMPLE_RATE
+    duration_seconds = combined_audio_cpu.shape[1] / SAMPLE_RATE
 
     return combined_path, int(duration_seconds)
 
