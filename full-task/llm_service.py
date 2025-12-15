@@ -102,7 +102,8 @@ def convert_to_saudi_dialect(fusha_text: str):
     """Convert Fusha Arabic to Saudi dialect using generation + validation (using colleague's logic)"""
 
     if not openai_client:
-        return "ERROR: OpenAI client not initialized"
+        print("ERROR: OpenAI client not initialized")
+        return None
 
     current_retries = 0
     generated_text = ""
@@ -174,4 +175,4 @@ def convert_to_saudi_dialect(fusha_text: str):
 
     # Final failure
     print(f" drop فشل نهائي في معالجة النص: {fusha_text[:50]}...")
-    return "FAILED_GENERATION"
+    return None
