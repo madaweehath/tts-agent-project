@@ -59,7 +59,7 @@ full-task/
 
 ## ⚙️ Requirements
 
-- Python 3.9+
+- Python 3.10
 - CUDA GPU recommended for TTS
 - OpenAI API key
 - Google Cloud Storage bucket
