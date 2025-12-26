@@ -1,5 +1,5 @@
 
-```markdown
+
 # 📰 3ulum-Alyawm Agent Service — Full Task
 
 This service implements the full automation pipeline for the **3ulum-Alyawm Arabic News Podcast system**.  
