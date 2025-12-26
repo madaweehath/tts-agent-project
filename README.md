@@ -146,6 +146,31 @@ If GCS is unavailable, files are stored locally:
 ./tts_model/audio_outputs
 ```
 
+---
 
+### 🐳 Docker Support
+
+This service includes a Dockerfile for building a self-contained runtime environment with all system and Python dependencies required for Arabic TTS generation.
+
+The image is based on `python:3.10-slim` and installs:
+
+* Audio processing libraries (`ffmpeg`, `libsndfile`, `espeak-ng`)
+* Build tools for native dependencies
+* GPU-enabled PyTorch (CUDA 13.0 wheels)
+
+The container exposes port `8001` and runs the application using `app.py`.
+
+#### Build the image
+
+```bash
+docker build -t tts-agent .
 ```
+
+#### Run the container
+
+```bash
+docker run -p 8001:8001 --gpus all tts-agent
 ```
+
+> ⚠️ GPU support requires Docker with NVIDIA runtime enabled.
+
